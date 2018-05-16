@@ -366,7 +366,7 @@ abstract class AmazonCore{
      * @param string $path <p>The path to the config file.</p>
      * @throws Exception If the file cannot be found or read.
      */
-    public function setConfig($path){
+    public function setConfig($config){
         if ($config instanceof \AmazonMWSConfig) {
             $this->config = $config;
         }
