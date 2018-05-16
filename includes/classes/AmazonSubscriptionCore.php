@@ -42,11 +42,6 @@ abstract class AmazonSubscriptionCore extends AmazonCore{
     public function __construct($s = null, $mock = false, $m = null, $config = null){
         parent::__construct($s, $mock, $m, $config);
         include($this->env);
-        if (file_exists($this->config)){
-            include($this->config);
-        } else {
-            throw new Exception('Config file does not exist!');
-        }
 
         if (isset($AMAZON_VERSION_SUBSCRIBE)){
             $this->urlbranch = 'Subscriptions/' . $AMAZON_VERSION_SUBSCRIBE;
@@ -59,11 +54,13 @@ abstract class AmazonSubscriptionCore extends AmazonCore{
         if(isset($THROTTLE_TIME_SUBSCRIBE)) {
             $this->throttleTime = $THROTTLE_TIME_SUBSCRIBE;
         }
-
-        if (isset($store[$this->storeName]['marketplaceId'])){
-            $this->setMarketplace($store[$this->storeName]['marketplaceId']);
+        
+        //reset to store's default marketplace
+        $storeMP = $this->config->getStoreMarketPlace($this->storeName);
+        if(empty($storeMP)){
+            $this->log("Marketplace ID is missing",'Urgent');
         } else {
-            $this->log("Marketplace ID is missing", 'Urgent');
+            $this->setMarketplace($storeMP);
         }
     }
 
